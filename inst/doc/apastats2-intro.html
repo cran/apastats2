@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Getting Started with apastats2</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Getting Started with apastats2</h1>
+
+
+
+<p><code>apastats2</code> provides helpers for formatting statistical
+results in APA style. This vignette shows a minimal workflow using base
+datasets and core functions.</p>
+<div id="format-test-results" class="section level2">
+<h2>Format test results</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(apastats2)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co">#&gt; Loading required package: ggplot2</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co">#&gt; Loading required package: data.table</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co">#&gt; Attaching package: &#39;data.table&#39;</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="co">#&gt; The following object is masked from &#39;package:base&#39;:</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="co">#&gt;     %notin%</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>t_res <span class="ot">&lt;-</span> <span class="fu">t.test</span>(<span class="fu">rnorm</span>(<span class="dv">20</span>, <span class="at">mean =</span> <span class="dv">10</span>, <span class="at">sd =</span> <span class="dv">2</span>))</span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>t_str <span class="ot">&lt;-</span> <span class="fu">apa</span>(t_res)</span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>t_str</span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="co">#&gt; [1] &quot;_t_(19.0) = 25.42, _p_ &lt; .001&quot;</span></span></code></pre></div>
+<p>Inline rendering example: One-sample test result was <em>t</em>(19.0)
+= 25.42, <em>p</em> &lt; .001.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;sleep&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>mt_str <span class="ot">&lt;-</span> <span class="fu">apa_mean_and_t</span>(sleep<span class="sc">$</span>extra, sleep<span class="sc">$</span>group, <span class="at">which.mean =</span> <span class="dv">3</span>, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>mt_str</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt; [1] &quot;_M_ = 0.75 [-0.18, 1.74] vs. _M_ = 2.33 [1.24, 3.54], _t_(9.0) = -4.06, _p_ = .003&quot;</span></span></code></pre></div>
+<p>Inline rendering example: Sleep increase comparison was <em>M</em> =
+0.75 [-0.18, 1.74] vs. <em>M</em> = 2.33 [1.24, 3.54], <em>t</em>(9.0) =
+-4.06, <em>p</em> = .003.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">40</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fl">0.5</span> <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">40</span>, <span class="at">sd =</span> <span class="fl">0.8</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>cor_str <span class="ot">&lt;-</span> <span class="fu">apa</span>(<span class="fu">cor.test</span>(x, y))</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>cor_str</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; [1] &quot;_r_(38) = 0.41, _p_ = .009&quot;</span></span></code></pre></div>
+<p>Inline rendering example: Correlation result was <em>r</em>(38) =
+0.41, <em>p</em> = .009.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">20</span>, <span class="dv">15</span>, <span class="dv">35</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>chi_str <span class="ot">&lt;-</span> <span class="fu">apa</span>(<span class="fu">chisq.test</span>(tbl))</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>chi_str</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt; [1] &quot;$\\chi^2$(1, _N_ = 100) = 7.92, _p_ = .005, _V_ = .28&quot;</span></span></code></pre></div>
+<p>Inline rendering example: Chi-square result was <span class="math inline">\(\chi^2\)</span>(1, <em>N</em> = 100) = 7.92,
+<em>p</em> = .005, <em>V</em> = .28.</p>
+</div>
+<div id="format-model-terms" class="section level2">
+<h2>Format model terms</h2>
+<p>You can format selected terms from linear or generalized models.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>glm_res <span class="ot">&lt;-</span> <span class="fu">glm</span>(Freq <span class="sc">~</span> (Age <span class="sc">+</span> Sex) <span class="sc">*</span> Survived, <span class="at">family =</span> poisson, <span class="at">data =</span> <span class="fu">data.frame</span>(Titanic))</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>glm_str <span class="ot">&lt;-</span> <span class="fu">apa</span>(glm_res, <span class="at">term =</span> <span class="st">&quot;SexFemale:SurvivedYes&quot;</span>, <span class="at">dtype =</span> <span class="dv">3</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>glm_str</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt; [1] &quot;_B_ = 2.32, _SE_ = 0.12, _Z_ =  19.38, _p_ &lt; .001&quot;</span></span></code></pre></div>
+<p>Inline rendering example: GLM term result was <em>B</em> = 2.32,
+<em>SE</em> = 0.12, <em>Z</em> = 19.38, <em>p</em> &lt; .001.</p>
+</div>
+<div id="adjusted-confidence-intervals" class="section level2">
+<h2>Adjusted confidence intervals</h2>
+<p><code>get_adjusted_ci()</code> computes summary statistics and
+interval columns for between-subject, within-subject, and mixed designs.
+The within-subject Cousineau-Morey implementation is adapted from the
+<code>superb</code> framework, but <code>apastats2</code> implements it
+internally and does not require <code>superb</code>.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">data</span>(memory_noise)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co"># Between-subject intervals: standard vs high-variability sample</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>target_higher <span class="ot">&lt;-</span> memory_noise[</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  memory_noise<span class="sc">$</span>relative_noise <span class="sc">==</span> <span class="st">&quot;target more noisy&quot;</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>]</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>between_ci <span class="ot">&lt;-</span> <span class="fu">get_adjusted_ci</span>(</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>  target_higher,</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  <span class="at">value_var =</span> <span class="st">&quot;bias_percent&quot;</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>  <span class="at">between =</span> <span class="st">&quot;experiment&quot;</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>  <span class="at">wid =</span> <span class="st">&quot;participant&quot;</span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>)</span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>between_ci[, <span class="fu">c</span>(<span class="st">&quot;experiment&quot;</span>, <span class="st">&quot;descr&quot;</span>)]</span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt;   experiment                      descr</span></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#&gt; 1    Exp. 1A  _M_ = 2.18 [-8.82, 13.18]</span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#&gt; 2    Exp. 1B _M_ = -9.33 [-19.11, 0.44]</span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="co"># Within-subject Cousineau-Morey intervals</span></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a>within_ci <span class="ot">&lt;-</span> <span class="fu">get_adjusted_ci</span>(</span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a>  memory_noise[memory_noise<span class="sc">$</span>experiment <span class="sc">==</span> <span class="st">&quot;Exp. 1A&quot;</span>, ],</span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a>  <span class="at">value_var =</span> <span class="st">&quot;bias_percent&quot;</span>,</span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a>  <span class="at">within =</span> <span class="st">&quot;relative_noise&quot;</span>,</span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a>  <span class="at">wid =</span> <span class="st">&quot;participant&quot;</span></span>
+<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a>)</span>
+<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a>within_ci[, <span class="fu">c</span>(<span class="st">&quot;relative_noise&quot;</span>, <span class="st">&quot;descr&quot;</span>)]</span>
+<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a><span class="co">#&gt;      relative_noise                     descr</span></span>
+<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a><span class="co">#&gt; 1 target less noisy _M_ = 3.08 [-6.60, 12.77]</span></span>
+<span id="cb6-28"><a href="#cb6-28" tabindex="-1"></a><span class="co">#&gt; 2 target more noisy _M_ = 2.18 [-7.51, 11.86]</span></span>
+<span id="cb6-29"><a href="#cb6-29" tabindex="-1"></a></span>
+<span id="cb6-30"><a href="#cb6-30" tabindex="-1"></a><span class="co"># Mixed design</span></span>
+<span id="cb6-31"><a href="#cb6-31" tabindex="-1"></a>mixed_ci <span class="ot">&lt;-</span> <span class="fu">get_adjusted_ci</span>(</span>
+<span id="cb6-32"><a href="#cb6-32" tabindex="-1"></a>  memory_noise,</span>
+<span id="cb6-33"><a href="#cb6-33" tabindex="-1"></a>  <span class="at">value_var =</span> <span class="st">&quot;bias_percent&quot;</span>,</span>
+<span id="cb6-34"><a href="#cb6-34" tabindex="-1"></a>  <span class="at">within =</span> <span class="st">&quot;relative_noise&quot;</span>,</span>
+<span id="cb6-35"><a href="#cb6-35" tabindex="-1"></a>  <span class="at">between =</span> <span class="st">&quot;experiment&quot;</span>,</span>
+<span id="cb6-36"><a href="#cb6-36" tabindex="-1"></a>  <span class="at">wid =</span> <span class="st">&quot;participant&quot;</span></span>
+<span id="cb6-37"><a href="#cb6-37" tabindex="-1"></a>)</span>
+<span id="cb6-38"><a href="#cb6-38" tabindex="-1"></a>mixed_ci[, <span class="fu">c</span>(<span class="st">&quot;experiment&quot;</span>, <span class="st">&quot;relative_noise&quot;</span>, <span class="st">&quot;descr&quot;</span>)]</span>
+<span id="cb6-39"><a href="#cb6-39" tabindex="-1"></a><span class="co">#&gt;   experiment    relative_noise                       descr</span></span>
+<span id="cb6-40"><a href="#cb6-40" tabindex="-1"></a><span class="co">#&gt; 1    Exp. 1A target less noisy   _M_ = 3.08 [-6.60, 12.77]</span></span>
+<span id="cb6-41"><a href="#cb6-41" tabindex="-1"></a><span class="co">#&gt; 2    Exp. 1B target less noisy  _M_ = -1.77 [-10.01, 6.47]</span></span>
+<span id="cb6-42"><a href="#cb6-42" tabindex="-1"></a><span class="co">#&gt; 3    Exp. 1A target more noisy   _M_ = 2.18 [-7.51, 11.86]</span></span>
+<span id="cb6-43"><a href="#cb6-43" tabindex="-1"></a><span class="co">#&gt; 4    Exp. 1B target more noisy _M_ = -9.33 [-17.57, -1.09]</span></span></code></pre></div>
+</div>
+<div id="point-range-plotting" class="section level2">
+<h2>Point-range plotting</h2>
+<p><code>plot_pointrange()</code> can be used directly for quick
+summaries.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">plot_pointrange</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  memory_noise,</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> relative_noise, <span class="at">color =</span> experiment, <span class="at">y =</span> bias_percent),</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="at">wid =</span> <span class="st">&quot;participant&quot;</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="at">within_subj =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="at">withinvars =</span> <span class="st">&quot;relative_noise&quot;</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  <span class="at">betweenvars =</span> <span class="st">&quot;experiment&quot;</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>  <span class="at">connecting_line =</span> <span class="cn">TRUE</span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Relative noise&quot;</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Bias toward non-target (%)&quot;</span>,</span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">&quot;Experiment&quot;</span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(</span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a>    <span class="st">&quot;target less noisy&quot;</span> <span class="ot">=</span> <span class="st">&quot;Target less noisy&quot;</span>,</span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a>    <span class="st">&quot;target more noisy&quot;</span> <span class="ot">=</span> <span class="st">&quot;Target more noisy&quot;</span></span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a>  ))</span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a><span class="co">#&gt; ℹ Do you need to adjust the group aesthetic?</span></span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="misc-helpers" class="section level2">
+<h2>Misc helpers</h2>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">round_p</span>(<span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.0001</span>, <span class="fl">0.568</span>))</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#&gt; [1] &quot;= .025&quot; &quot;&lt; .001&quot; &quot;= .568&quot;</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>mean_ci_str <span class="ot">&lt;-</span> <span class="fu">apa_mean_conf</span>(<span class="fu">c</span>(<span class="fl">1.1</span>, <span class="fl">1.5</span>, <span class="fl">0.9</span>, <span class="fl">1.8</span>, <span class="fl">1.2</span>), <span class="at">bootCI =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>mean_ci_str</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co">#&gt; [1] &quot;_M_ = 1.30 [0.86, 1.74]&quot;</span></span></code></pre></div>
+<p>Inline rendering example: Mean and CI summary was <em>M</em> = 1.30
+[0.86, 1.74].</p>
+<p>See individual help pages for full argument details and supported
+model classes.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
